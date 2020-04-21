@@ -1,16 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bsk.PrimaryController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="755.0" minHeight="-Infinity" minWidth="755.0" prefHeight="400.0" prefWidth="755.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bsk.Controller">
    <children>
-      <Label text="Primary View" />
-      <Button fx:id="primaryButton" text="Switch to Secondary View" onAction="#switchToSecondary"/>
+      <TabPane prefHeight="400.0" prefWidth="755.0" tabClosingPolicy="UNAVAILABLE">
+         <tabs>
+            <Tab text="Szyfr płotkowy">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="755.0">
+                     <children>
+                        <Label layoutX="40.0" layoutY="32.0" prefHeight="17.0" prefWidth="136.0" text="Tekst do zaszyfrowania" />
+                        <Label layoutX="40.0" layoutY="72.0" prefHeight="17.0" prefWidth="136.0" text="Klucz" />
+                        <Label layoutX="40.0" layoutY="112.0" prefHeight="17.0" prefWidth="136.0" text="Tekst zaszyfrowany" />
+                        <Label layoutX="40.0" layoutY="152.0" prefHeight="17.0" prefWidth="136.0" text="Tekst odszyfrowany" />
+                        <TextField id="plainTextRailFence" fx:id="plainTextRailFence" layoutX="176.0" layoutY="32.0" />
+                        <TextField id="keyRailFence" fx:id="keyRailFence" layoutX="176.0" layoutY="72.0" />
+                        <TextField id="encryptedRailFence" fx:id="encryptedRailFence" editable="false" layoutX="176.0" layoutY="112.0" />
+                        <TextField id="decryptedRailFence" fx:id="decryptedRailFence" editable="false" layoutX="176.0" layoutY="152.0" />
+                        <Button id="encryptRailFence" layoutX="176.0" layoutY="192.0" mnemonicParsing="false" onAction="#encryptRailFence" onMouseClicked="#encryptRailFence" text="Szyfruj" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+            <Tab text="Przestawienia macierzowe A">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="755.0">
+                     <children>
+                        <Label layoutX="40.0" layoutY="32.0" prefHeight="17.0" prefWidth="136.0" text="Tekst do zaszyfrowania" />
+                        <Label layoutX="40.0" layoutY="72.0" prefHeight="17.0" prefWidth="136.0" text="Klucz" />
+                        <Label layoutX="40.0" layoutY="112.0" prefHeight="17.0" prefWidth="136.0" text="Tekst zaszyfrowany" />
+                        <Label layoutX="40.0" layoutY="152.0" prefHeight="17.0" prefWidth="136.0" text="Tekst odszyfrowany" />
+                        <TextField id="plainTextTranspositionA" fx:id="plainTextTranspositionA" layoutX="176.0" layoutY="32.0" />
+                        <TextField id="keyTranspositionA" fx:id="keyTranspositionA" layoutX="176.0" layoutY="72.0" />
+                        <TextField id="encryptedTranspositionA" fx:id="encryptedTranspositionA" editable="false" layoutX="176.0" layoutY="112.0" />
+                        <TextField id="decryptedTranspositionA" fx:id="decryptedTranspositionA" editable="false" layoutX="176.0" layoutY="152.0" />
+                        <Button id="encryptTranspositionA" layoutX="176.0" layoutY="192.0" mnemonicParsing="false" onAction="#encryptTranspositionA" onMouseClicked="#encryptTranspositionA" text="Szyfruj" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+            <Tab text="Przestawienia macierzowe B">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="755.0">
+                     <children>
+                        <Label layoutX="40.0" layoutY="32.0" prefHeight="17.0" prefWidth="136.0" text="Tekst do zaszyfrowania" />
+                        <Label layoutX="40.0" layoutY="72.0" prefHeight="17.0" prefWidth="136.0" text="Klucz" />
+                        <Label layoutX="40.0" layoutY="112.0" prefHeight="17.0" prefWidth="136.0" text="Tekst zaszyfrowany" />
+                        <Label layoutX="40.0" layoutY="152.0" prefHeight="17.0" prefWidth="136.0" text="Tekst odszyfrowany" />
+                        <TextField id="plainTextTranspositionB" fx:id="plainTextTranspositionB" layoutX="176.0" layoutY="32.0" />
+                        <TextField id="keyTranspositionB" fx:id="keyTranspositionB" layoutX="176.0" layoutY="72.0" />
+                        <TextField id="encryptedTranspositionB" fx:id="encryptedTranspositionB" editable="false" layoutX="176.0" layoutY="112.0" />
+                        <TextField id="decryptedTranspositionB" fx:id="decryptedTranspositionB" editable="false" layoutX="176.0" layoutY="152.0" />
+                        <Button id="encryptTranspositionB" layoutX="176.0" layoutY="192.0" mnemonicParsing="false" onAction="#encryptTranspositionB" onMouseClicked="#encryptTranspositionB" text="Szyfruj" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+            <Tab text="Przestawienia macierzowe C">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="755.0">
+                     <children>
+                        <Label layoutX="40.0" layoutY="32.0" prefHeight="17.0" prefWidth="136.0" text="Tekst do zaszyfrowania" />
+                        <Label layoutX="40.0" layoutY="72.0" prefHeight="17.0" prefWidth="136.0" text="Klucz" />
+                        <Label layoutX="40.0" layoutY="112.0" prefHeight="17.0" prefWidth="136.0" text="Tekst zaszyfrowany" />
+                        <Label layoutX="40.0" layoutY="152.0" prefHeight="17.0" prefWidth="136.0" text="Tekst odszyfrowany" />
+                        <TextField id="plainTextTranspositionC" fx:id="plainTextTranspositionC" layoutX="176.0" layoutY="32.0" />
+                        <TextField id="keyTranspositionC" fx:id="keyTranspositionC" layoutX="176.0" layoutY="72.0" />
+                        <TextField id="encryptedTranspositionC" fx:id="encryptedTranspositionC" editable="false" layoutX="176.0" layoutY="112.0" />
+                        <TextField id="decryptedTranspositionC" fx:id="decryptedTranspositionC" editable="false" layoutX="176.0" layoutY="152.0" />
+                        <Button id="encryptTranspositionC" layoutX="176.0" layoutY="192.0" mnemonicParsing="false" onAction="#encryptTranspositionC" onMouseClicked="#encryptTranspositionC" text="Szyfruj" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+            <Tab text="Szyfr cezara">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="755.0">
+                     <children>
+                        <Label layoutX="40.0" layoutY="32.0" text="Tekst do zaszyfrowania" />
+                        <Label layoutX="40.0" layoutY="72.0" prefHeight="17.0" prefWidth="110.0" text="Klucz" />
+                        <Label layoutX="40.0" layoutY="112.0" text="Tekst zaszyfrowany" />
+                        <Label layoutX="40.0" layoutY="152.0" text="Tekst odszyfrowany" />
+                        <TextField id="plainTextCaesar" fx:id="plainTextCaesar" layoutX="176.0" layoutY="32.0" />
+                        <TextField id="keyCaesar" fx:id="keyCaesar" layoutX="176.0" layoutY="72.0" />
+                        <TextField id="encryptedCaesar" fx:id="encryptedCaesar" editable="false" layoutX="176.0" layoutY="112.0" />
+                        <TextField id="decryptedCaesar" fx:id="decryptedCaesar" editable="false" layoutX="176.0" layoutY="152.0" />
+                        <Button id="encryptCaesar" fx:id="encryptCaesar" layoutX="176.0" layoutY="192.0" mnemonicParsing="false" onAction="#encryptCaesar" text="Szyfruj" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+            <Tab text="Szyfr Vigenere">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="755.0">
+                     <children>
+                        <Label layoutX="34.0" layoutY="35.0" text="Tekst do zaszyfrowania" />
+                        <Label layoutX="32.0" layoutY="108.0" text="Tekst zaszyfrowany" />
+                        <Label layoutX="32.0" layoutY="148.0" text="Tekst odszyfrowany" />
+                        <Label layoutX="40.0" layoutY="73.0" prefHeight="17.0" prefWidth="110.0" text="Klucz" />
+                        <TextField id="plainTextVigenere" fx:id="plainTextVigenere" layoutX="176.0" layoutY="31.0" />
+                        <TextField id="keyVigenere" fx:id="keyVigenere" layoutX="176.0" layoutY="69.0" />
+                        <TextField id="encryptedVigenere" fx:id="encryptedVigenere" editable="false" layoutX="176.0" layoutY="102.0" />
+                        <TextField id="decryptedVigenere" fx:id="decryptedVigenere" editable="false" layoutX="176.0" layoutY="142.0" />
+                        <Button id="encryptVigenere" fx:id="encryptVigenere" layoutX="252.0" layoutY="180.0" mnemonicParsing="false" onAction="#encryptVigenere" text="Szyfruj" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+         </tabs>
+      </TabPane>
+
    </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-</VBox>
+
+   <Button layoutX="369.0" layoutY="40.0" mnemonicParsing="false" onAction="#singleFileChooser" text="Wybierz plik" />
+   <Button layoutX="459.0" layoutY="40.0" mnemonicParsing="false" onAction="#removeSelectedFile" text="Usuń plik" />
+   <Label id="selectedFileName" fx:id="selectedFileName" layoutX="369.0" layoutY="65.0" prefHeight="38.0" prefWidth="179.0" />
+   <Label id="selectedFilePath" fx:id="selectedFilePath" layoutX="459.0" layoutY="65.0" prefHeight="38.0" prefWidth="1.0" />
+</Pane>
