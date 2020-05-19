@@ -1,5 +1,6 @@
 package org.bsk;
 
+import org.bsk.*;
 import ciphers.z1.*;
 import ciphers.z2.*;
 import ciphers.z3.*;
@@ -11,8 +12,6 @@ import javafx.scene.control.*;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.security.SecureRandom;
-import java.util.Random;
 
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
@@ -24,6 +23,9 @@ import javafx.stage.FileChooser;
 public class Controller implements EventHandler<ActionEvent> {
 
     private File selectedFile;
+    private String destinationFileDir;
+    private String destinationFileName;
+    private String destinationFilePath;
 
     @FXML private TextField plainTextRailFence;
     @FXML private TextField keyRailFence;
@@ -71,6 +73,9 @@ public class Controller implements EventHandler<ActionEvent> {
     @FXML private TextArea previewSSC;
 
     @FXML private Button cancelLFSR;
+    @FXML private Button generateLFSR;
+    @FXML private Button generateSSC;
+    @FXML private Button encryptSSCC;
     @FXML private Button cancelSSC;
 
     @FXML private Pane pane;
@@ -101,7 +106,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
     @FXML
     private void encryptTranspositionA() throws Exception {
-
         String plainText = plainTextTranspositionA.getText();
         String key = keyTranspositionA.getText();
 
@@ -121,7 +125,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
     @FXML
     private void encryptTranspositionB() throws Exception {
-
         String plainText = plainTextTranspositionB.getText();
         String key = keyTranspositionB.getText();
 
@@ -141,7 +144,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
     @FXML
     private void encryptTranspositionC() throws Exception {
-
         String plainText = plainTextTranspositionC.getText();
         String key = keyTranspositionC.getText();
 
@@ -182,7 +184,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
     @FXML
     private void encryptVigenere() throws Exception {
-
         String plainText = plainTextVigenere.getText();
         String key = keyVigenere.getText();
 
@@ -193,6 +194,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
             String decryptedText = Vigenere.decrypt(cipherText, key);
             decryptedVigenere.setText(decryptedText);
+
         } else {
 
             key = keyVigenere.getText();
@@ -204,64 +206,38 @@ public class Controller implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
 
         Node node = (Node) event.getSource();
+        if(node.getId().equals("generateLFSR")) {
+            ThreadedGenerateLFSR();
 
-        if(node.getId().equals("generateLFSR"))
-            generateLFSR();
-
-        if(node.getId().equals("generateSSC"))
-            generateSSC();
-    }
-
-    private String getRandomRegister(int registerLength) {
-
-        StringBuilder tempSeed = new StringBuilder();
-        StringBuilder onlyZeros;
-        boolean invalidStringFound = true;
-
-        Random rand = new SecureRandom();
-
-        while(invalidStringFound) {
-
-            tempSeed = new StringBuilder();
-            onlyZeros = new StringBuilder();
-            invalidStringFound = false;
-
-            for (int i = 0; i < registerLength; i++) {
-                tempSeed.append(rand.nextInt(2));
-
-                onlyZeros.append(0);
-            }
-            if (tempSeed.indexOf(onlyZeros.toString()) > -1)
-                invalidStringFound = true;
         }
-
-        return tempSeed.toString();
+        if(node.getId().equals("generateSSC")) {
+            ThreadedGenerateSSC();
+        }
     }
 
-    private void setResultLFSR(String register, boolean isSequence) {
+    public void setResultLFSR(String register, boolean isSequence) {
 
         String iterationResult = register.substring(register.length() - 1);
 
-        if(isSequence)
+        if(isSequence) {
             sequenceLFSR.appendText(iterationResult);
-
+        }
         resultLFSR.appendText(iterationResult);
         previewLFSR.appendText(register + "\n");
     }
 
-    private void generateLFSR() {
+    public void ThreadedGenerateLFSR() {
 
+        String tekstDoZaszyfrowania = polynomialLFSR.getText();
         sequenceLFSR.setText("");
         resultLFSR.setText("");
         previewLFSR.setText("");
-        String polynomialText = polynomialLFSR.getText();
-
-        final String randomSeed = getRandomRegister(polynomialText.length());
+        previewSSC.setText("");
 
         try {
             Thread th = new Thread(new Task<String>() {
 
-                String polynomial = polynomialText;
+                String polynomial = tekstDoZaszyfrowania;
                 String register = "";
                 String sequenceBegin = "";
                 int sequenceCounter = 0;
@@ -276,26 +252,35 @@ public class Controller implements EventHandler<ActionEvent> {
 
                         cancelLFSR.setOnMouseClicked(event -> cancel());
 
-                        if(isCancelled())
+                        if(isCancelled()) {
                             break;
+                        }
 
-                        register = LFSR.generate(polynomial, iteration, randomSeed);
+                        register = LFSR.generate(polynomial, register, iteration);
 
                         if (iteration == 0) {
                             sequenceBegin = register;
                             sequenceCounter++;
                         }
 
-                        if(iteration != 0 && sequenceBegin.equals(register))
+                        if(iteration != 0 && sequenceBegin.equals(register)) {
                             sequenceCounter++;
+                        }
+
 
                         status = register;
-                        final String resultStatus = status;
+                        final String fstat = status;
 
-                        Platform.runLater(() -> setResultLFSR(resultStatus, isSequence));
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                setResultLFSR(fstat, isSequence);
+                            }
+                        });
 
-                        if(sequenceCounter == 2)
+                        if(sequenceCounter == 2) {
                             isSequence = false;
+                        }
 
                         Thread.sleep(100);
                         iteration++;
@@ -303,6 +288,7 @@ public class Controller implements EventHandler<ActionEvent> {
                     return status;
                 }
             });
+
             th.setDaemon(true);
             th.start();
             Thread.sleep(1000);
@@ -311,7 +297,7 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
-    private void setResultSSC(String register) {
+    public void setResultSSC(String register) {
 
         String iterationResult = register.substring(register.length() - 1);
 
@@ -319,26 +305,31 @@ public class Controller implements EventHandler<ActionEvent> {
         previewSSC.appendText(register + "\n");
     }
 
-    private void generateSSC() {
+    public void ThreadedGenerateSSC() {
 
         previewSSC.setText("");
         keySSC.setText("");
-        encryptedSSC.setText("");
-        decryptedSSC.setText("");
-        plainTextBinarySSC.setText("");
         encryptedBinarySSC.setText("");
+        encryptedSSC.setText("");
         decryptedBinarySSC.setText("");
+        decryptedSSC.setText("");
 
-        plainTextBinarySSC.setText(SynchronousStreamCipher.stringToBinary(plaintTextSSC.getText()));
+        //zamienić na binarny, chwilowo jest statycznie
+        String plaintText = plaintTextSSC.getText();
+        plainTextBinarySSC.setText(SynchronousStreamCipher.stringToBinary(plaintText));
         String plainTextBinary = plainTextBinarySSC.getText();
-        String polynomialText = polynomialSSC.getText();
 
-        final String randomSeed = getRandomRegister(polynomialText.length());
+
+
+//        String plainTextBinary = plainTextBinarySSC.getText();
+        String polynomial = polynomialSSC.getText();
+
+
 
         try {
             Thread th = new Thread(new Task<String>() {
 
-                String polynomial = polynomialText;
+                String polynomial2 = polynomial;
                 int iteration = 0;
 
                 @Override
@@ -349,36 +340,45 @@ public class Controller implements EventHandler<ActionEvent> {
 
                         cancelSSC.setOnMouseClicked(event -> cancel());
 
-                        if(isCancelled())
+                        if(isCancelled()) {
                             break;
+                        }
 
-                        polynomial = LFSR.generate(polynomial, iteration, randomSeed);
+                        polynomial2 = LFSR.generate(polynomial2,"", iteration);
 
-                        status = polynomial;
-                        final String resultStatus = status;
+                        status = polynomial2;
+                        final String fstat = status;
 
-                        Platform.runLater(() -> setResultSSC(resultStatus));
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                setResultSSC(fstat);
+                            }
+                        });
 
                         Thread.sleep(20);
                         iteration++;
                     }
-
                     String key = keySSC.getText();
                     String plainTextBinary = plainTextBinarySSC.getText();
+                    String polynomial = polynomialSSC.getText();
 
-                    String encryptedTextBinary = SynchronousStreamCipher.streamCipher(plainTextBinary, key);
+                    String encryptedTextBinary = SynchronousStreamCipher.streamCipher(plainTextBinary, polynomial, key);
                     encryptedBinarySSC.setText(encryptedTextBinary);
                     String encryptedText = SynchronousStreamCipher.binaryToString(encryptedTextBinary);
                     encryptedSSC.setText(encryptedText);
 
-                    String decryptedTextBinary = SynchronousStreamCipher.streamCipher(encryptedTextBinary, key);
+                    String decryptedTextBinary = SynchronousStreamCipher.streamCipher(encryptedTextBinary,polynomial, key);
                     decryptedBinarySSC.setText(decryptedTextBinary);
                     String decryptedText = SynchronousStreamCipher.binaryToString(decryptedTextBinary);
                     decryptedSSC.setText(decryptedText);
 
+
+
                     return status;
                 }
             });
+
             th.setDaemon(true);
             th.start();
             Thread.sleep(1000);
@@ -388,7 +388,7 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     @FXML
-    private void singleFileChooser() {
+    private void singleFileChooser(ActionEvent event) {
 
         FileChooser fileChooser = new FileChooser();
 
@@ -398,7 +398,7 @@ public class Controller implements EventHandler<ActionEvent> {
         fileChooser.setTitle("Wybierz plik do zaszyfrowania");
         Stage stage = (Stage)pane.getScene().getWindow();
 
-        File selectedFile = fileChooser.showOpenDialog(stage);
+        File selectedFile = fileChooser.showOpenDialog(null);
 
         if(selectedFile != null) {
             selectedFileName.setText("" + selectedFile.getName());
@@ -432,7 +432,7 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     @FXML
-    private void removeSelectedFile() {
+    private void removeSelectedFile(ActionEvent event) {
 
         this.selectedFile = null;
 
@@ -468,10 +468,6 @@ public class Controller implements EventHandler<ActionEvent> {
     @FXML
     private void readFile(String className, File selectedFile, String key) throws IOException {
 
-        String destinationFileDir;
-        String destinationFileName;
-        String destinationFilePath;
-
         String packageName = "";
         String classPath;
         String cipherText = "";
@@ -490,13 +486,12 @@ public class Controller implements EventHandler<ActionEvent> {
             System.out.println(fnfex.getMessage() + "The file was not found");
             System.exit(0);
         }
-
         try {
             while((line = br.readLine()) != null) {
                 try {
-                    if ( className.equals("RailFence") || className.equals("TranspositionA") || className.equals("TranspositionB") ) {
+                    if ( className == "RailFence" || className == "TranspositionA" || className == "TranspositionB") {
                         packageName = "z1";
-                    } else if ( className.equals("Caesar") || className.equals("TranspositionC") || className.equals("Vigenere") ) {
+                    } else if ( className == "Caesar" || className == "TranspositionC" || className == "Vigenere") {
                         packageName = "z2";
                     }
                     classPath = "ciphers" + "." + packageName  + "." +className;
